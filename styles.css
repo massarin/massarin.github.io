@@ -1,0 +1,133 @@
+/*
+ * Globals
+ */
+
+/* Links */
+
+a, a:focus, a:hover {
+  color: #fff;
+}
+
+/* Custom default button */
+
+.btn-secondary, .btn-secondary:hover, .btn-secondary:focus {
+  color: #333;
+  text-shadow: none;
+  /* Prevent inheritance from `body` */
+  background-color: #fff;
+  border: .05rem solid #fff;
+}
+
+/*
+ * Base structure
+ */
+
+html, body {
+  height: 100%;
+  background-color: #333;
+  font-family: "Arial", cursive, sans-serif;
+
+}
+
+body {
+  display: -ms-flexbox;
+  display: flex;
+
+  /*text colour*/
+  color: #fff;
+
+  text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+  /*box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);*/
+}
+
+.cover-container {
+  max-width: 85%;
+}
+
+* {
+		padding: 0;
+		margin: 0;
+    z-index: 900;
+	}
+	svg {
+		position: absolute;
+		top: 0;
+		left: 0;
+    width: 100%;
+    height: 100%;
+		box-sizing: border-box;
+		display: block;
+		background-color: #0e4166;
+    background-image: linear-gradient(to bottom, rgba(14, 65, 102, 0.86), #0e4166);
+	}
+
+
+/*
+ * Header
+ */
+
+.masthead {
+  margin-bottom: 2rem;
+}
+
+.masthead-brand {
+  margin-bottom: 0;
+}
+
+.nav-masthead .nav-link {
+  float: center;
+  padding: .25rem 0;
+  color: rgba(255, 255, 255, .5);
+  background-color: transparent;
+  border-bottom: .25rem solid transparent;
+}
+
+.nav-masthead .nav-link:hover, .nav-masthead .nav-link:focus {
+  border-bottom-color: rgba(255, 255, 255, .25);
+}
+
+.nav-masthead .nav-link+.nav-link {
+  margin-left: 1rem;
+}
+
+.nav-masthead .active {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+
+/*
+ * Cover
+ */
+
+ .menu {
+   font-size: 1.2em;
+   font-style: italic;
+ }
+
+.lead {
+  padding: 1rem;
+}
+
+.inner {
+  font-size: 0.875em;
+  font-style: italic;
+}
+
+/*@media only screen and (min-width: 480px) and ( max-height: 320px) {
+
+}*/
+
+#myCanvas {
+    background: rgb(208, 212, 213);
+    position: absolute;
+    border: 1px solid #000000;
+}
+
+#display {
+  /*display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position:relative;*/
+    z-index:10;
+}
