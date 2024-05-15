@@ -3,13 +3,11 @@
  */
 
 /* Links */
-
 a, a:focus, a:hover {
   color: #fff;
 }
 
 /* Custom default button */
-
 .btn-secondary, .btn-secondary:hover, .btn-secondary:focus {
   color: #333;
   text-shadow: none;
@@ -18,60 +16,44 @@ a, a:focus, a:hover {
   border: .05rem solid #fff;
 }
 
-/*
- * Base structure
- */
 
+/* ball game */
+
+#GameCanvas {
+    background: rgb(208, 212, 213);
+    position: absolute;
+    border: 1px solid #000000;
+}
+
+/*************************/
+
+/* General reset styles */
 html, body {
   height: 100%;
   background-color: #333;
   font-family: "Arial", cursive, sans-serif;
-
 }
 
 body {
   display: -ms-flexbox;
   display: flex;
-
-  /*text colour*/
-  color: #fff;
-
+  margin: 0;
+  overflow: hidden;
+  color: #fff; /* Default text color */
   text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
-  /*box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);*/
 }
 
-.cover-container {
-  max-width: 85%;
-}
+/* Bootstrap and external library styles */
+/* ... */
 
-* {
-		padding: 0;
-		margin: 0;
-    z-index: 900;
-	}
-	svg {
-		position: absolute;
-		top: 0;
-		left: 0;
-    width: 100%;
-    height: 100%;
-		box-sizing: border-box;
-		display: block;
-		background-color: #0e4166;
-    background-image: linear-gradient(to bottom, rgba(14, 65, 102, 0.86), #0e4166);
-	}
-
-
-/*
- * Header
- */
-
+/* Styles for content */
 .masthead {
   margin-bottom: 2rem;
 }
 
-.masthead-brand {
-  margin-bottom: 0;
+.menu {
+  font-size: 1.2em;
+  font-style: italic;
 }
 
 .nav-masthead .nav-link {
@@ -82,7 +64,8 @@ body {
   border-bottom: .25rem solid transparent;
 }
 
-.nav-masthead .nav-link:hover, .nav-masthead .nav-link:focus {
+.nav-masthead .nav-link:hover,
+.nav-masthead .nav-link:focus {
   border-bottom-color: rgba(255, 255, 255, .25);
 }
 
@@ -95,15 +78,6 @@ body {
   border-bottom-color: #fff;
 }
 
-/*
- * Cover
- */
-
- .menu {
-   font-size: 1.2em;
-   font-style: italic;
- }
-
 .lead {
   padding: 1rem;
 }
@@ -113,21 +87,39 @@ body {
   font-style: italic;
 }
 
-/*@media only screen and (min-width: 480px) and ( max-height: 320px) {
+/* Styles for background video container */
+.cover-container {
+  position: relative;
+  z-index: 0;
 
-}*/
-
-#myCanvas {
-    background: rgb(208, 212, 213);
-    position: absolute;
-    border: 1px solid #000000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-#display {
-  /*display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  position:relative;*/
-    z-index:10;
+/* Styles for background video */
+.background-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+/* Footer styles */
+.mastfoot {
+  margin-top: 2rem;
+}
+
+/* Custom styling for the footer inner content */
+.mastfoot .inner {
+  padding: 20px;
+  background: rgba(0, 0, 0, 0);
+}
+
+.mastfoot p {
+  margin-bottom: 0;
 }

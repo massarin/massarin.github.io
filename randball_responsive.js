@@ -1,27 +1,29 @@
-const speed = 0.016;
+const speed = 0.010;
+const fRnd = 0;
 const ballRadiusRelative = 0.030;
 const paddleHeightRelative = 0.04;
 const paddleWidthRelative = 0.20;
 var lives = 1;
 
-var canvas = document.getElementById("myCanvas");
+var canvas = document.getElementById("GameCanvas");
 var ctx = canvas.getContext("2d");
 
 function resizeCanvas() {
   var ratio = window.screen.width / window.screen.height
-  canvas.width = window.innerWidth * 0.70
+  canvas.width = window.innerWidth * 0.65
   canvas.height = canvas.width / ratio
 }
 
 function positionCanvas() {
   canvas.style.position = 'absolute';
-  //canvas.style.top = window.innerHeight * 0.10 + 'px';
-  canvas.style.top = 70 + 'px';
-  canvas.style.left = window.innerWidth / 2 - canvas.width / 2 + 'px';
-};
+  canvas.style.top = (window.innerHeight - canvas.height) / 2 + 'px';
+  canvas.style.left = (window.innerWidth - canvas.width) / 2 + 'px';
+}
+
 resizeCanvas();
 positionCanvas();
 //window.addEventListener('resize', positionCanvas);
+
 
 var BallGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
 BallGradient.addColorStop(0, "black");
@@ -40,10 +42,10 @@ function drawBall() {
 
 function wallCheck() {
   if (y + dy < ballRadius) {
-    dy = -dy;
+    dy = -dy * (1 + Math.random() * fRnd); // Random Rnd angle
   } else if (y + dy > canvas.height - ballRadius) {
     if (x > paddleX && x < paddleX + paddleWidth) {
-      dy = -dy;
+      dy = -dy * (1 + Math.random() * fRnd); // Random Rnd angle for paddle
     } else {
       lives--;
       if (!lives) {
@@ -51,12 +53,12 @@ function wallCheck() {
         document.location.reload();
         clearInterval(interval); // Needed for Chrome to end game
       } else {
-        dy = -dy;
+        dy = -dy * (1 + Math.random() * fRnd); // Random Rnd angle for bottom wall
       }
     }
   }
   if (x + dx < ballRadius || x + dx > canvas.width - ballRadius) {
-    dx = -dx;
+    dx = -dx * (1 + Math.random() * fRnd); // Random Rnd angle for side walls
   }
 }
 
@@ -131,12 +133,15 @@ function collisionDetection() {
     for (var r = 0; r < brickRowCount; r++) {
       var b = bricks[c][r];
       if (b.status == 1 && x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
-        dy = -dy;
+        dy = -dy * (1 + Math.random() * fRnd); // Random Rnd angle for bricks
         b.status = 0;
         ++score;
+
         if (score == brickTotal) {
           alert("YOU WIN, CONGRATULATIONS!");
-          document.location.reload();
+          setTimeout(function() {
+            document.location.reload();
+          }, 1000); // Reload after 1000 milliseconds (1 second)
           clearInterval(interval);
         }
       }
@@ -175,16 +180,35 @@ const myTheta0 = 20;
 
 var x = x0;
 var y = y0;
-var myTheta = (myTheta0 + (90 - 1.7 * myTheta0) * Math.random()) * 2 * Math.PI / 360;
-if (Math.random() < 0.5) {
-  myTheta = Math.PI - myTheta
-}
+var rndDir
+const alpha = 0.1
 
-const dx0 = Math.cos(myTheta) * canvas.width
-const dy0 = Math.sin(myTheta) * canvas.height
+do {
+  rndDir = Math.random();
+} while (rndDir < alpha || rndDir > 1 - alpha || (rndDir > 0.45 && rndDir < 0.55)); // Avoid directions close to horizontal or vertical
+
+
+var myTheta = rndDir * Math.PI
+
+const dx0 = Math.cos(myTheta) * canvas.width;
+const dy0 = Math.sin(myTheta) * canvas.height;
 
 var dx = speed * dx0;
 var dy = -1 * speed * dy0;
+
+var lastScore = 0
+const fBoost = 1.01
+
+// Add these lines at the beginning to set up a new variable
+var changeDirectionInterval = setInterval(changeDirection, 2000); // Change direction every 5 seconds
+
+// Add this function to change the direction randomly
+function changeDirection() {
+  var speedMagnitude = Math.sqrt(dx * dx + dy * dy);
+  var newAngle = Math.random() * 2 * Math.PI; // Random angle in radians
+  dx = Math.cos(newAngle) * speedMagnitude;
+  dy = Math.sin(newAngle) * speedMagnitude;
+}
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -199,10 +223,18 @@ function draw() {
   }
   positionCanvas();
   wallCheck();
+  if (lives <= 0 || score === brickTotal) {
+    clearInterval(changeDirectionInterval);
+  }
+  if (score !== lastScore) { // Check if the score has changed
+    lastScore = score; // Update the last recorded score
+    dx *= fBoost; // Apply boost to dx
+    dy *= fBoost; // Apply boost to dy
+  }
 
-  var boost = (1 + 1.2 * (score / brickTotal))
-  x += (dx * boost);
-  y += (dy * boost);
+  // Update ball position
+  x += dx;
+  y += dy;
 
   var paddleMove = speed * canvas.width;
 
@@ -217,6 +249,7 @@ function draw() {
       paddleX = 0;
     }
   }
+
   drawBricks();
   collisionDetection();
   drawPaddle();
@@ -225,13 +258,25 @@ function draw() {
   drawScore();
   drawLives();
 
-
-  //requestAnimationFrame(draw);
-
+  requestAnimationFrame(draw);
 }
-
+var sdx = 0;
+var sdy = 0;
+var spaceCounter = 0;
+var spacePressed = false;
 var rightPressed = false;
 var leftPressed = false;
+
+function keySpaceHandler(e) {
+  if (e.key == " ") {
+    spaceCounter += 1;
+    if (spaceCounter % 2 == 1){
+      spacePressed = true;
+    } else {
+      spacePressed = false;
+    }
+  }
+}
 
 function keyDownHandler(e) {
   if (e.key == "Right" || e.key == "ArrowRight") {
@@ -268,8 +313,9 @@ function showCoords(event) {
   var coords5 = "brick 1,0:" + bricks[1][0].x + " " + bricks[1][0].y;
   document.getElementById("display").innerHTML = coords1 + "<br>" + coords2 + "<br>" + coords3 + "<br>" + coords4 + "<br>" + coords5;
 }
+document.addEventListener("keyspace", keySpaceHandler, false);
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("mousemove", mouseMoveHandler, false);
 
-var interval = setInterval(draw, 3);
+var interval = requestAnimationFrame(draw, 3);
