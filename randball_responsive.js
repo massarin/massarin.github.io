@@ -26,7 +26,7 @@ positionCanvas();
 
 
 var BallGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-BallGradient.addColorStop(0, "black");
+BallGradient.addColorStop(0, "white");
 BallGradient.addColorStop(1, "rgb(240, 234, 50)");
 
 var ballRadius = 0;
@@ -151,7 +151,7 @@ function collisionDetection() {
 
 var ScoreGradient = ctx.createLinearGradient(8 * canvas.width / 480, 20 * canvas.height / 320, 8 * canvas.width / 480 + 7 * 16 * canvas.width / 480, 20 * canvas.height / 320 + 16 * canvas.width / 480);
 ScoreGradient.addColorStop(0, "red");
-ScoreGradient.addColorStop(1, "black");
+ScoreGradient.addColorStop(1, "white");
 var score = 0;
 
 function drawScore() {
@@ -165,7 +165,7 @@ function drawScore() {
 
 var LivesGradient = ctx.createLinearGradient(canvas.width - 65 * canvas.width / 480, 20 * canvas.height / 320, canvas.width - 65 * canvas.width / 480 + 7 * 16 * canvas.width / 480, 20 * canvas.height / 320 + 16 * canvas.width / 480);
 LivesGradient.addColorStop(0, "red");
-LivesGradient.addColorStop(1, "black");
+LivesGradient.addColorStop(1, "white");
 
 function drawLives() {
   var fontPixels = 16 * canvas.width / 480;

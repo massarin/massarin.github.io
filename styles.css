@@ -1,125 +1,85 @@
-/*
- * Globals
- */
-
-/* Links */
-a, a:focus, a:hover {
-  color: #fff;
-}
-
-/* Custom default button */
-.btn-secondary, .btn-secondary:hover, .btn-secondary:focus {
-  color: #333;
-  text-shadow: none;
-  /* Prevent inheritance from `body` */
-  background-color: #fff;
-  border: .05rem solid #fff;
-}
-
-
-/* ball game */
-
-#GameCanvas {
-    background: rgb(208, 212, 213);
-    position: absolute;
-    border: 1px solid #000000;
-}
-
-/*************************/
-
-/* General reset styles */
-html, body {
-  height: 100%;
-  background-color: #333;
-  font-family: "Arial", cursive, sans-serif;
+/* General styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    background-color: #131a43; /* Dark solid background color */
 }
 
 body {
-  display: -ms-flexbox;
-  display: flex;
-  margin: 0;
-  overflow: hidden;
-  color: #fff; /* Default text color */
-  text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+    font-family: Arial, sans-serif;
+    text-align: center;
+    color: white; /* Ensure text is visible on dark background */
 }
 
-/* Bootstrap and external library styles */
-/* ... */
-
-/* Styles for content */
-.masthead {
-  margin-bottom: 2rem;
+header {
+    padding: 1rem;
+    position: relative;
+    z-index: 1;
+    background-color: #13132d; /* Match header background color */
 }
 
-.menu {
-  font-size: 1.2em;
-  font-style: italic;
+header nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
-.nav-masthead .nav-link {
-  float: center;
-  padding: .25rem 0;
-  color: rgba(255, 255, 255, .5);
-  background-color: transparent;
-  border-bottom: .25rem solid transparent;
+header nav ul li {
+    display: inline;
+    margin: 0 10px;
 }
 
-.nav-masthead .nav-link:hover,
-.nav-masthead .nav-link:focus {
-  border-bottom-color: rgba(255, 255, 255, .25);
+header nav ul li a {
+    color: white;
+    text-decoration: none;
 }
 
-.nav-masthead .nav-link+.nav-link {
-  margin-left: 1rem;
+main {
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
 }
 
-.nav-masthead .active {
-  color: #fff;
-  border-bottom-color: #fff;
+footer {
+    background-color: #13132d; /* Match footer background color */
+    color: white;
+    padding: 1rem;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    z-index: 1;
 }
 
-.lead {
-  padding: 1rem;
+#github-readme {
+    text-align: left;
+    margin: 2rem auto;
+    max-width: 600px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 1rem;
+    border-radius: 8px;
+    overflow: auto;
 }
 
-.inner {
-  font-size: 0.875em;
-  font-style: italic;
+/* Responsive styles */
+@media (max-width: 768px) {
+    header nav ul {
+        display: flex;
+        flex-direction: column;
+    }
+
+    header nav ul li {
+        margin: 0.5rem 0;
+    }
 }
 
-/* Styles for background video container */
-.cover-container {
-  position: relative;
-  z-index: 0;
+@media (max-width: 480px) {
+    main {
+        padding: 1rem;
+    }
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Styles for background video */
-.background-video {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -1;
-}
-
-/* Footer styles */
-.mastfoot {
-  margin-top: 2rem;
-}
-
-/* Custom styling for the footer inner content */
-.mastfoot .inner {
-  padding: 20px;
-  background: rgba(0, 0, 0, 0);
-}
-
-.mastfoot p {
-  margin-bottom: 0;
+    footer {
+        font-size: 0.8rem;
+    }
 }
