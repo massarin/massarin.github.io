@@ -14,15 +14,24 @@
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
+                <li><a href="#">RandBall</a></li>
             </ul>
         </nav>
     </header>
     <canvas id="GameCanvas"></canvas>
     <footer>
-        <p>&copy; 2024 Powered by me, Vanta & CHAT-GPT.</p>
+        <p>&copy; 2024 Powered by me, Vanta & ChatGPT.</p>
         <p>Hosted by Github.</p>
     </footer>
     <script src="randball_responsive.js"></script>
+    <script>        
+        document.addEventListener("DOMContentLoaded", function() {
+            const Link = document.querySelector("nav ul li a[href='#']");
+            
+            // Add the active class to the home link when the page loads
+            Link.classList.add("active");
+        });
+    </script>
 </body>
 
 </html>

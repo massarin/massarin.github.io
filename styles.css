@@ -31,9 +31,21 @@ header nav ul li {
     margin: 0 10px;
 }
 
-header nav ul li a {
-    color: white;
-    text-decoration: none;
+/* Style for the menu links */
+nav ul li a {
+    text-decoration: none; /* Remove default underline */
+    color: #ffffff; /* White color for the text */
+    font-weight: normal; /* Normal font weight by default */
+}
+
+/* Style for the active menu link */
+nav ul li a.active { /* To handle active link when clicked */
+    font-weight: bold; /* Bold font weight for the active link */
+}
+
+/* Style for the hovered menu link */
+nav ul li a:hover {
+    text-decoration: underline; /* Underline when hovered */
 }
 
 main {

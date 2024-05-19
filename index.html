@@ -16,8 +16,8 @@
     <header>
         <nav>
             <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="randball.html">Feel Like a Game?</a></li>
+                <li><a href="#">Home</a></li>
+                <li><a href="randball.html">RandBall</a></li>
             </ul>
         </nav>
     </header>
@@ -28,7 +28,7 @@
         </section>
     </main>
     <footer>
-        <p>&copy; 2024 Powered by me, Vanta & CHAT-GPT.</p>
+        <p>&copy; 2024 Powered by me, Vanta & ChatGPT.</p>
         <p>Hosted by Github.</p>
     </footer>
 
@@ -135,6 +135,14 @@
 
         fetchGitHubReadme();
         addSocialButtons(); // Call function to add social buttons
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Get the home link
+            const Link = document.querySelector("nav ul li a[href='#']");
+            
+            // Add the active class to the home link when the page loads
+            Link.classList.add("active");
+        });
     </script>
 </body>
 
