@@ -40,10 +40,10 @@
 
         // Function to initialize Vanta Halo with random offset values
         function initVantaHalo() {
-            const HaloBoxLength = 0.3
-            const xOffset = generateRandomOffset(-1*HaloBoxLength, HaloBoxLength); // Adjust the range according to your needs
-            const yOffset = generateRandomOffset(-1.5*HaloBoxLength, 0.5*HaloBoxLength); // Adjust the range according to your needs
-
+            const HaloBoxLength = 0.1
+            const xOffset = generateRandomOffset(0*HaloBoxLength, 0*HaloBoxLength); // Adjust the range according to your needs
+            const yOffset = generateRandomOffset(-1.5*HaloBoxLength, -1.1*HaloBoxLength); // Adjust the range according to your needs
+            const sizeOffset = generateRandomOffset(1, 1.5);
             VANTA.HALO({
                 el: "#vanta-background",
                 mouseControls: true,
@@ -52,10 +52,10 @@
                 minHeight: 200.00,
                 minWidth: 200.00,
                 baseColor: 0x212154,
-                amplitudeFactor: 0.00,
+                amplitudeFactor: 1,
                 xOffset: xOffset,
                 yOffset: yOffset,
-                size: 0.40
+                size: 0.4 * sizeOffset
             });
         }
 
@@ -122,14 +122,14 @@
             const linkedinButton = document.createElement('a');
             linkedinButton.href = 'http://www.linkedin.com/in/nicmsri';
             linkedinButton.target = '_blank';
-            linkedinButton.innerHTML = `<img src="${linkedinIconUrl}" alt="LinkedIn" width="48" height="48">`;
+            linkedinButton.innerHTML = `<img src="${linkedinIconUrl}" alt="LinkedIn" width="72" height="72">`;
             document.getElementById('social-buttons').appendChild(linkedinButton);
 
             // Create GitHub button
             const githubButton = document.createElement('a');
             githubButton.href = 'https://github.com/nicmsri';
             githubButton.target = '_blank';
-            githubButton.innerHTML = `<img src="${githubIconUrl}" alt="GitHub" width="48" height="48">`;
+            githubButton.innerHTML = `<img src="${githubIconUrl}" alt="GitHub" width="72" height="72">`;
             document.getElementById('social-buttons').appendChild(githubButton);
         }
 
