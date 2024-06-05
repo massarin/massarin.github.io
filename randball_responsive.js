@@ -432,5 +432,5 @@ document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("mousemove", mouseMoveHandler, false);
 
-var interval = requestAnimationFrame(draw, 3);
+var interval = requestAnimationFrame(draw, 50);
 var changeDirectionInterval = setInterval(changeDirection, 2000); // Change direction every 5 seconds
