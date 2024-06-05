@@ -3,33 +3,45 @@ body, html {
     margin: 0;
     padding: 0;
     height: 100%;
-    overflow: hidden;
+    width: 100%;
     background-color: #131a43; /* Dark solid background color */
+    overflow: hidden;
 }
 
 body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #131a43; /* Dark solid background color */
     font-family: Arial, sans-serif;
     text-align: center;
     color: white; /* Ensure text is visible on dark background */
 }
 
 header {
+    width: 100%;
     padding: 1rem;
     position: relative;
     z-index: 1;
     background-color: #13132d; /* Match header background color */
 }
 
+
+header nav {
+    text-align: center; /* Center the nav items */
+}
+
 header nav ul {
-    list-style-type: none;
+    display: inline-block; /* Change the ul to be inline-block to center within the nav */
     padding: 0;
     margin: 0;
 }
 
 header nav ul li {
-    display: inline;
+    display: inline; /* Ensure the li elements are inline */
     margin: 0 10px;
 }
+
 
 /* Style for the menu links */
 nav ul li a {
@@ -49,19 +61,32 @@ nav ul li a:hover {
 }
 
 main {
-    padding: 2rem;
     position: relative;
     z-index: 1;
+    height: calc(100vh - 60px); /* Adjust according to your header/footer height */
+    overflow-y: auto; /* Enable vertical scrolling */
 }
 
 footer {
-    background-color: #13132d; /* Match footer background color */
+    width: 100%;
     color: white;
     padding: 1rem;
     position: fixed;
-    width: 100%;
     bottom: 0;
     z-index: 1;
+}
+
+#vanta-background {
+    flex: 1; /* Grow to fill the available space */
+}
+
+#home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: center; /* Ensure text is centered */
 }
 
 #github-readme {
@@ -72,6 +97,19 @@ footer {
     padding: 1rem;
     border-radius: 8px;
     overflow: auto;
+}
+
+#social-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Center items vertically */
+    gap: 20px; /* Space between the buttons */
+    margin-top: 20px; /* Adjust the spacing if needed */
+}
+
+#social-buttons a img {
+    width: 72px;  /* Ensure consistent size */
+    height: 72px;
 }
 
 /* Responsive styles */

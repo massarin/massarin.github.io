@@ -40,6 +40,8 @@ function drawBall() {
   ctx.closePath();
 }
 
+gameOver = false;
+
 function wallCheck() {
   if (y + dy < ballRadius) {
     dy = -dy * (1 + Math.random() * fRnd); // Random Rnd angle
@@ -48,10 +50,9 @@ function wallCheck() {
       dy = -dy * (1 + Math.random() * fRnd); // Random Rnd angle for paddle
     } else {
       lives--;
-      if (!lives) {
-        alert("GAME OVER");
-        document.location.reload();
-        clearInterval(interval); // Needed for Chrome to end game
+      if (lives <= 0) {
+        gameOver = true; // Set game over state to true
+        clearInterval(changeDirectionInterval);
       } else {
         dy = -dy * (1 + Math.random() * fRnd); // Random Rnd angle for bottom wall
       }
@@ -61,6 +62,70 @@ function wallCheck() {
     dx = -dx * (1 + Math.random() * fRnd); // Random Rnd angle for side walls
   }
 }
+
+function drawGameOver() {
+  // Remove all event listeners
+  canvas.removeEventListener("mousemove", mouseMoveHandler);
+  canvas.removeEventListener("keydown", keyDownHandler);
+  canvas.removeEventListener("keyup", keyUpHandler);
+  
+  ctx.font = "45px Impact"; // Change font to Impact for a more ominous look
+  ctx.fillStyle = "#000";
+  ctx.textAlign = "center";
+  ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 30);
+  
+  // Draw circled arrow for restart
+  ctx.beginPath();
+  ctx.arc(canvas.width / 2, canvas.height / 2 + 20, 20, 0, Math.PI * 2);
+  ctx.fillStyle = "#000";
+  ctx.fill();
+  ctx.closePath();
+  
+  ctx.beginPath();
+  ctx.moveTo(canvas.width / 2 - 10, canvas.height / 2 + 20);
+  ctx.lineTo(canvas.width / 2 + 10, canvas.height / 2 + 20);
+  ctx.lineTo(canvas.width / 2, canvas.height / 2 + 30);
+  ctx.fillStyle = "#fff";
+  ctx.fill();
+  ctx.closePath();
+
+  // Add retry button click event listener
+  canvas.addEventListener("click", restartGame);
+}
+
+function restartGame() {
+  // Remove the retry button click event listener
+  canvas.removeEventListener("click", restartGame);
+  
+  // Reset variables and start the game again
+  gameOver = false;
+  gameWon = false;
+  lives = 1; // Reset lives
+  score = 0; // Reset score
+  x = x0; // Reset ball position
+  y = y0;
+  dx = speed * dx0; // Reset ball speed
+  dy = -1 * speed * dy0;
+  paddleX = (canvas.width - paddleWidth) / 2; // Reset paddle position
+  
+  // Reset bricks
+  bricks = [];
+  for (var c = 0; c < brickColumnCount; c++) {
+    bricks[c] = [];
+    for (var r = 0; r < brickRowCount; r++) {
+      bricks[c][r] = {
+        x: 0,
+        y: 0,
+        status: 1
+      };
+    }
+  }
+  
+  // Restart the game loop
+  interval = requestAnimationFrame(draw, 3);
+  changeDirectionInterval = setInterval(changeDirection, 2000); // Change direction every 5 seconds
+}
+
 
 var paddleHeight = paddleHeightRelative * canvas.height;;
 var paddleWidth = paddleWidthRelative * canvas.width;;
@@ -128,6 +193,8 @@ function drawBricks() {
   }
 }
 
+gameWon = false;
+
 function collisionDetection() {
   for (var c = 0; c < brickColumnCount; c++) {
     for (var r = 0; r < brickRowCount; r++) {
@@ -138,16 +205,49 @@ function collisionDetection() {
         ++score;
 
         if (score == brickTotal) {
-          alert("YOU WIN, CONGRATULATIONS!");
-          setTimeout(function() {
-            document.location.reload();
-          }, 1000); // Reload after 1000 milliseconds (1 second)
-          clearInterval(interval);
+          gameWon = true; // Set game won state to true
+          clearInterval(changeDirectionInterval);
+          return; // Stop further collision detection
         }
       }
     }
   }
 }
+
+function drawWin() {
+  // Remove all event listeners
+  canvas.removeEventListener("mousemove", mouseMoveHandler);
+  canvas.removeEventListener("keydown", keyDownHandler);
+  canvas.removeEventListener("keyup", keyUpHandler);
+  
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Draw congratulatory message
+  ctx.font = "45px Comic Sans MS"; // Cheerful font
+  ctx.fillStyle = "red"; // Cheerful green color
+  ctx.textAlign = "center";
+  ctx.fillText("YOU WIN! 😺", canvas.width / 2, canvas.height / 2 - 30);
+
+  // Draw circled arrow for restart
+  ctx.beginPath();
+  ctx.arc(canvas.width / 2, canvas.height / 2 + 20, 20, 0, Math.PI * 2);
+  ctx.fillStyle = "#32CD32";
+  ctx.fill();
+  ctx.closePath();
+  
+  ctx.beginPath();
+  ctx.moveTo(canvas.width / 2 - 10, canvas.height / 2 + 20);
+  ctx.lineTo(canvas.width / 2 + 10, canvas.height / 2 + 20);
+  ctx.lineTo(canvas.width / 2, canvas.height / 2 + 30);
+  ctx.fillStyle = "#fff";
+  ctx.fill();
+  ctx.closePath();
+
+  // Add retry button click event listener
+  canvas.addEventListener("click", restartGame);
+}
+
+
 
 var ScoreGradient = ctx.createLinearGradient(8 * canvas.width / 480, 20 * canvas.height / 320, 8 * canvas.width / 480 + 7 * 16 * canvas.width / 480, 20 * canvas.height / 320 + 16 * canvas.width / 480);
 ScoreGradient.addColorStop(0, "red");
@@ -199,15 +299,15 @@ var dy = -1 * speed * dy0;
 var lastScore = 0
 const fBoost = 1.01
 
-// Add these lines at the beginning to set up a new variable
-var changeDirectionInterval = setInterval(changeDirection, 2000); // Change direction every 5 seconds
-
-// Add this function to change the direction randomly
+// Add this function to change the direction randomly within pi/4
 function changeDirection() {
   var speedMagnitude = Math.sqrt(dx * dx + dy * dy);
-  var newAngle = Math.random() * 2 * Math.PI; // Random angle in radians
-  dx = Math.cos(newAngle) * speedMagnitude;
-  dy = Math.sin(newAngle) * speedMagnitude;
+  var maxAngleChange = Math.PI / 2; // Maximum angle change is pi/4
+  var newAngle = Math.random() * 2 * maxAngleChange - maxAngleChange; // Random angle change within pi/4
+  var currentAngle = Math.atan2(dy, dx); // Current angle of motion
+  var newDirection = currentAngle + newAngle; // New direction after angle change
+  dx = Math.cos(newDirection) * speedMagnitude;
+  dy = Math.sin(newDirection) * speedMagnitude;
 }
 
 function draw() {
@@ -222,19 +322,32 @@ function draw() {
     y *= canvas.height / canvasHeightRenormalisation;
   }
   positionCanvas();
-  wallCheck();
-  if (lives <= 0 || score === brickTotal) {
-    clearInterval(changeDirectionInterval);
-  }
-  if (score !== lastScore) { // Check if the score has changed
-    lastScore = score; // Update the last recorded score
-    dx *= fBoost; // Apply boost to dx
-    dy *= fBoost; // Apply boost to dy
-  }
 
-  // Update ball position
-  x += dx;
-  y += dy;
+  // Check if the game is over
+  if (gameOver) { 
+    drawGameOver();
+    return;
+  } 
+
+  // Check if the game is won
+  if (gameWon) {
+    drawWin();
+    return;
+  }  else {
+    wallCheck();
+    if (lives <= 0 || score === brickTotal) {
+      clearInterval(changeDirectionInterval);
+    }
+    if (score !== lastScore) { // Check if the score has changed
+      lastScore = score; // Update the last recorded score
+      dx *= fBoost; // Apply boost to dx
+      dy *= fBoost; // Apply boost to dy
+    }
+
+    // Update ball position
+    x += dx;
+    y += dy;
+  }
 
   var paddleMove = speed * canvas.width;
 
@@ -260,6 +373,7 @@ function draw() {
 
   requestAnimationFrame(draw);
 }
+
 var sdx = 0;
 var sdy = 0;
 var spaceCounter = 0;
@@ -319,3 +433,4 @@ document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("mousemove", mouseMoveHandler, false);
 
 var interval = requestAnimationFrame(draw, 3);
+var changeDirectionInterval = setInterval(changeDirection, 2000); // Change direction every 5 seconds
