@@ -25,13 +25,10 @@
         <main>
             <section id="home">
                 <div id="github-readme"></div>
+                <button id="toggle-readme">Show More</button>
                 <div id="social-buttons"></div> <!-- Container for social buttons -->
             </section>
         </main>
-        <footer>
-            <p>&copy; 2024 Powered by me, Vanta & ChatGPT.</p>
-            <p>Hosted by Github.</p>
-        </footer>
     </div>
 
     <script>
@@ -61,64 +58,53 @@
         // Call the function to initialize Vanta Halo with random offsets
         initVantaHalo();
 
-        // Function to display a custom GitHub profile README
-        function displayCustomReadme() {
-            const customReadme = `
-        # Hi! I am Nicolò,
-        
-        **Aspiring Researcher ☄️ | Computational Physicist 🍎 | Simulations Enthusiast 💾**
-        
-        ---
-        
-        #### About Me
-        I am a recent graduate with a MSc in Cosmology and a background in computational methods and programming. ヽ(^^)丿
-            `;
-
-            const formattedReadme = formatMarkdown(customReadme);
-            document.getElementById('github-readme').innerHTML = formattedReadme;
-        }
-
-        // Function to format Markdown content
-        function formatMarkdown(markdown) {
-            // Split the Markdown content by lines
-            const lines = markdown.split('\n');
-            let formattedMarkdown = '';
-
-            // Iterate through each line
-            lines.forEach(line => {
-                // Remove leading and trailing whitespace
-                line = line.trim();
-
-                if (line.startsWith('# ')) {
-                    // Title formatting for lines starting with #
-                    formattedMarkdown += `<h1>${line.replace(/^#\s*/, '')}</h1>`;
-                } else if (line.startsWith('#### ')) {
-                    // Subtitle formatting for lines starting with ####
-                    formattedMarkdown += `<h4>${line.replace(/^####\s*/, '')}</h4>`;
-                } else if (line.startsWith('**')) {
-                    // Bold formatting for lines starting with **
-                    formattedMarkdown += `<strong>${line.replace(/\*\*/g, '')}</strong><br>`;
-                } else if (line.startsWith('- ')) {
-                    // Bullet point formatting for lines starting with -
-                    const lineWithoutBullet = line.replace(/^- /, '');
-                    formattedMarkdown += `<li>${lineWithoutBullet.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</li>`;
-                } else if (line === '---') {
-                    // Horizontal rule formatting for lines containing ---
-                    formattedMarkdown += '<hr>';
-                } else if (line) {
-                    // Bold formatting for **bold text**
-                    formattedMarkdown += line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') + '<br>';
+        // Function to fetch and display the GitHub README
+        async function fetchAndDisplayReadme() {
+            try {
+                const response = await fetch('https://raw.githubusercontent.com/massarin/massarin/main/README.md');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
-            });
+                const readmeContent = await response.text();
+                console.log('Fetched README content:', readmeContent);
 
-            // Wrap the formattedMarkdown in <ul> tags if bullet points are present
-            if (formattedMarkdown.includes('<li>')) {
-                formattedMarkdown = `<ul>${formattedMarkdown}</ul>`;
+                // Truncate the README content
+                const truncatedContent = readmeContent.substring(0, 207) + '...';
+                const fullContent = readmeContent;
+
+                // Configure marked to allow HTML
+                const markedOptions = {
+                    sanitize: false, // Allow HTML
+                    breaks: true,    // Convert '\n' in paragraphs into <br>
+                };
+
+                // Format the Markdown content
+                const truncatedFormatted = marked.parse(truncatedContent, markedOptions);
+                const fullFormatted = marked.parse(fullContent, markedOptions);
+
+                console.log('Truncated Formatted Content:', truncatedFormatted);
+                console.log('Full Formatted Content:', fullFormatted);
+
+                // Display the truncated content initially
+                document.getElementById('github-readme').innerHTML = truncatedFormatted;
+
+                // Add event listener to toggle between truncated and full content
+                document.getElementById('toggle-readme').addEventListener('click', () => {
+                    const readmeElement = document.getElementById('github-readme');
+                    if (readmeElement.innerHTML === truncatedFormatted) {
+                        readmeElement.innerHTML = fullFormatted;
+                        document.getElementById('toggle-readme').textContent = 'Show Less';
+                    } else {
+                        readmeElement.innerHTML = truncatedFormatted;
+                        document.getElementById('toggle-readme').textContent = 'Show More';
+                    }
+                    // Force a reflow to ensure the height transition works correctly
+                    void readmeElement.offsetWidth;
+                });
+            } catch (error) {
+                console.error('Error fetching README:', error);
             }
-
-            return formattedMarkdown;
         }
-
 
         // Function to add social buttons
         function addSocialButtons() {
@@ -128,20 +114,20 @@
 
             // Create LinkedIn button
             const linkedinButton = document.createElement('a');
-            linkedinButton.href = 'https://ch.linkedin.com/in/nicmsri';
+            linkedinButton.href = 'https://ch.linkedin.com/in/massarin';
             linkedinButton.target = '_blank';
             linkedinButton.innerHTML = `<img src="${linkedinIconUrl}" alt="LinkedIn" width="72" height="72">`;
             document.getElementById('social-buttons').appendChild(linkedinButton);
 
             // Create GitHub button
             const githubButton = document.createElement('a');
-            githubButton.href = 'https://github.com/nicmsri';
+            githubButton.href = 'https://github.com/massarin';
             githubButton.target = '_blank';
             githubButton.innerHTML = `<img src="${githubIconUrl}" alt="GitHub" width="72" height="72">`;
             document.getElementById('social-buttons').appendChild(githubButton);
         }
 
-        displayCustomReadme();
+        fetchAndDisplayReadme();
         addSocialButtons(); // Call function to add social buttons
 
         document.addEventListener("DOMContentLoaded", function() {
@@ -152,6 +138,10 @@
             Link.classList.add("active");
         });
     </script>
+
+    <footer>
+        <p>&copy; Hosted on github.io &copy;</p>
+    </footer> 
 </body>
 
 </html>

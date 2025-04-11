@@ -11,7 +11,7 @@ body, html {
 body {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    min-height: 100vh;
     background-color: #131a43; /* Dark solid background color */
     font-family: Arial, sans-serif;
     text-align: center;
@@ -61,23 +61,22 @@ nav ul li a:hover {
 }
 
 main {
+    flex: 1;
     position: relative;
     z-index: 1;
-    height: calc(100vh - 60px); /* Adjust according to your header/footer height */
+    height: calc(100vh - 100px); /* Adjust according to your header/footer height */
     overflow-y: auto; /* Enable vertical scrolling */
 }
 
 footer {
+    flex:1;
     width: 100%;
     color: white;
     padding: 1rem;
     position: fixed;
     bottom: 0;
     z-index: 1;
-}
-
-#vanta-background {
-    flex: 1; /* Grow to fill the available space */
+    text-align: center;
 }
 
 #home {
@@ -97,6 +96,25 @@ footer {
     padding: 1rem;
     border-radius: 8px;
     overflow: auto;
+    transition: height 0.3s ease; /* Smooth transition for height changes */
+    height: auto; /* Allow height to adjust based on content */
+    min-height: 100px; /* Ensure a minimum height */
+    margin-bottom: 10px;
+}
+
+#toggle-readme {
+    display: block;
+    margin: 10px 0;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#toggle-readme:hover {
+    background-color: #0056b3;
 }
 
 #social-buttons {
@@ -111,6 +129,38 @@ footer {
     width: 72px;  /* Ensure consistent size */
     height: 72px;
 }
+
+footer {
+    flex:1;
+    width: 100%;
+    color: white;
+    padding: 1rem;
+    z-index: 1;
+    text-align: center;
+}
+
+footer p {
+    margin: 0.5rem 0;
+}
+
+footer ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+footer ul li {
+    margin: 0.5rem 0;
+}
+
+footer ul li a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+footer ul li a:hover {
+    text-decoration: underline;
+}
+
 
 /* Responsive styles */
 @media (max-width: 768px) {
