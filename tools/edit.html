@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>edit</title>
+<link rel="stylesheet" href="/styles.css">
+<style>
+/* Editor only, never published: allowed to be a bit wider than the site. */
+body { max-width: 100ch; }
+#pane { display: flex; gap: 1em; align-items: flex-start; }
+#pane > * { flex: 1; min-width: 0; }
+textarea { width: 100%; height: 70vh; font-family: monospace; font-size: 1em; }
+#preview { height: 70vh; overflow-y: auto; border: 1px solid #ccc; padding: .5em; }
+#status { color: #666; }
+</style>
+</head>
+<body>
+
+<nav>
+<a href="/">home</a>
+<a href="/blog.html">blog</a>
+</nav>
+<hr>
+
+<p>
+<label>file <code>blog/</code><input id="name" size="30" placeholder="2026-08-21-my-post"><code>.md</code></label>
+<label>open <select id="open"><option value="">new post</option></select></label>
+<button id="save">save</button>
+<button id="rename">rename</button>
+<button id="delete">delete</button>
+<span id="status"></span>
+</p>
+
+<div id="pane">
+<textarea id="text" placeholder="# Title&#10;&#10;Write markdown. Equations like $E=mc^2$ work."></textarea>
+<div id="preview"></div>
+</div>
+
+<script>
+const text = document.getElementById('text');
+const name = document.getElementById('name');
+const open = document.getElementById('open');
+const status = document.getElementById('status');
+
+// Default filename: today's date, so posts sort themselves.
+name.value = new Date().toISOString().slice(0, 10) + '-';
+
+function preview() {
+  fetch('/api/render', {method: 'POST', body: text.value})
+    .then(r => r.text())
+    .then(html => document.getElementById('preview').innerHTML = html);
+}
+
+// Debounced so a fast typist does not queue up a render per keystroke.
+let timer;
+text.addEventListener('input', () => {
+  clearTimeout(timer);
+  timer = setTimeout(preview, 250);
+});
+
+function listPosts() {
+  fetch('/api/posts').then(r => r.json()).then(names => {
+    open.innerHTML = '<option value="">new post</option>' +
+      names.map(n => '<option>' + n + '</option>').join('');
+    open.value = loaded;
+  });
+}
+
+open.addEventListener('change', () => {
+  if (!open.value) { loaded = ''; text.value = ''; preview(); return; }
+  loaded = open.value;
+  name.value = open.value;
+  fetch('/api/post?name=' + encodeURIComponent(open.value))
+    .then(r => r.text())
+    .then(md => { text.value = md; preview(); });
+});
+
+// The post currently on disk, which is what rename and delete act on.
+// Save writes to whatever is in the filename box, so changing the box and
+// saving gives you a copy; rename is the one that moves the existing file.
+let loaded = '';
+
+function post(url, body) {
+  return fetch(url, {method: 'POST', body: JSON.stringify(body)})
+    .then(r => r.ok ? r.json() : r.text().then(t => Promise.reject(t)));
+}
+
+document.getElementById('save').addEventListener('click', () => {
+  post('/api/save', {name: name.value, text: text.value})
+    .then(d => {
+      loaded = name.value;
+      status.textContent = 'saved -> ' + d.href;
+      listPosts();
+    })
+    .catch(e => status.textContent = 'error: ' + e);
+});
+
+document.getElementById('rename').addEventListener('click', () => {
+  if (!loaded) { status.textContent = 'open a post first'; return; }
+  if (name.value === loaded) { status.textContent = 'change the filename first'; return; }
+  // The old .html is deleted, so any link to the old URL breaks.
+  if (!confirm('Rename ' + loaded + ' to ' + name.value + '?\nIts URL changes.')) return;
+  post('/api/rename', {old: loaded, new: name.value})
+    .then(d => {
+      loaded = d.name;
+      status.textContent = 'renamed -> ' + d.href;
+      listPosts();
+    })
+    .catch(e => status.textContent = 'error: ' + e);
+});
+
+document.getElementById('delete').addEventListener('click', () => {
+  if (!loaded) { status.textContent = 'open a post first'; return; }
+  if (!confirm('Delete ' + loaded + '? The .md and .html both go.')) return;
+  post('/api/delete', {name: loaded})
+    .then(d => {
+      loaded = '';
+      text.value = '';
+      name.value = new Date().toISOString().slice(0, 10) + '-';
+      preview();
+      status.textContent = 'deleted ' + d.deleted;
+      listPosts();
+    })
+    .catch(e => status.textContent = 'error: ' + e);
+});
+
+listPosts();
+preview();
+</script>
+
+</body>
+</html>

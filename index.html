@@ -1,150 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-    <link rel="icon" href="media/favicon.ico">
-    <meta
-    name="description"
-    content="Nicolò Massari's home page. An astrophysics and cosmology scholar with a knack for simualtions and programming.">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vanta/dist/vanta.halo.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nicolò Massari</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="media/favicon.ico">
+<meta name="description" content="Nicolò Massari's home page. Astrophysics, cosmology and software.">
 </head>
-
 <body>
-    <div id="vanta-background">
-        <header>
-            <nav>
-                <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="randball.html">RandBall</a></li>
-                </ul>
-            </nav>
-        </header>
-        <main>
-            <section id="home">
-                <div id="github-readme"></div>
-                <button id="toggle-readme">Show More</button>
-                <div id="social-buttons"></div> <!-- Container for social buttons -->
-            </section>
-        </main>
-    </div>
 
-    <script>
-        // Function to generate random offset values within a certain area
-        function generateRandomOffset(min, max) {
-            return Math.random() * (max - min) + min;
-        }
+<nav>
+<a href="index.html">home</a>
+<a href="blog.html">blog</a>
+<a href="randball.html">randball</a>
+</nav>
+<hr>
 
-        // Function to initialize Vanta Halo with random offset values
-        function initVantaHalo() {
-            const amplitudeOffset = generateRandomOffset(0, 1);
-            VANTA.HALO({
-                el: "#vanta-background",
-                mouseControls: true,
-                touchControls: true,
-                gyroControls: false,
-                minHeight: 200.00,
-                minWidth: 200.00,
-                baseColor: 0x212154,
-                amplitudeFactor: amplitudeOffset,
-                xOffset: 0,
-                yOffset: -0.1,
-                size: 0.55
-            });
-        }
+<p> Nicolò Massari's <a href="https://www.lam.fr/en/author/nmassari/">PhD in Astrophysics</a> at Aix-Marseille University, Laboratoire d'Astrophysique de Marseille (LAM). 
+<ul>
+  <li>interests in galaxy-scale strong and weak lensing, field-level cosmology, open software and always up for a debate and coffee</li>
+  <li>lived in Newton Abbot, Bologna, Bristol and Zurich</li>
+  <li>links to my <a href="https://www.linkedin.com/in/massarin/">linkedin</a>, <a href="https://github.com/massarin">github</a></li>
+</ul>
+</p>
+<hr>
 
-        // Call the function to initialize Vanta Halo with random offsets
-        initVantaHalo();
+<!-- This page is my GitHub profile README, rendered by GitHub's own markdown API. -->
+<main id="readme">
+<noscript>
+<p>This page renders <a href="https://github.com/massarin">github.com/massarin</a>'s README
+with JavaScript. Without it, go read the original.</p>
+</noscript>
+</main>
 
-        // Function to fetch and display the GitHub README
-        async function fetchAndDisplayReadme() {
-            try {
-                const response = await fetch('https://raw.githubusercontent.com/massarin/massarin/main/README.md');
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const readmeContent = await response.text();
-                console.log('Fetched README content:', readmeContent);
+<script>
+const REPO = 'massarin/massarin';
+const RAW  = 'https://raw.githubusercontent.com/' + REPO + '/main/';
 
-                // Truncate the README content
-                const truncatedContent = readmeContent.substring(0, 207) + '...';
-                const fullContent = readmeContent;
+fetch(RAW + 'README.md')
+  .then(r => r.text())
+  .then(md => fetch('https://api.github.com/markdown', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    // mode gfm + context: tables, footnotes, task lists, #123 issue links
+    body: JSON.stringify({text: md, mode: 'gfm', context: REPO})
+  }))
+  .then(r => r.ok ? r.text() : Promise.reject('HTTP ' + r.status))
+  .then(html => {
+    // GitHub does not rewrite relative paths, so assets/ still points nowhere.
+    document.getElementById('readme').innerHTML =
+      html.replace(/(src|href)="assets\//g, '$1="' + RAW + 'assets/');
+  })
+  .catch(e => {
+    // Unauthenticated markdown API is 60 requests/hour per IP: 403 means wait.
+    document.getElementById('readme').innerHTML =
+      '<p>Could not reach GitHub (' + e + '). It lives at ' +
+      '<a href="https://github.com/massarin">github.com/massarin</a>.</p>';
+  });
+</script>
 
-                // Configure marked to allow HTML
-                const markedOptions = {
-                    sanitize: false, // Allow HTML
-                    breaks: true,    // Convert '\n' in paragraphs into <br>
-                };
+<hr>
+<footer>
+<p><small>minimal html &middot; <a href="https://github.com/massarin/massarin.github.io/">this repo</a> &middot; hosted on <a href="https://docs.github.com/en/pages">github</a> &middot; registered at <a href="https://www.infomaniak.com/">infomaniak.com</a></small></p>
+</footer>
 
-                // Format the Markdown content
-                const truncatedFormatted = marked.parse(truncatedContent, markedOptions);
-                const fullFormatted = marked.parse(fullContent, markedOptions);
-
-                console.log('Truncated Formatted Content:', truncatedFormatted);
-                console.log('Full Formatted Content:', fullFormatted);
-
-                // Display the truncated content initially
-                document.getElementById('github-readme').innerHTML = truncatedFormatted;
-
-                // Add event listener to toggle between truncated and full content
-                document.getElementById('toggle-readme').addEventListener('click', () => {
-                    const readmeElement = document.getElementById('github-readme');
-                    if (readmeElement.innerHTML === truncatedFormatted) {
-                        readmeElement.innerHTML = fullFormatted;
-                        document.getElementById('toggle-readme').textContent = 'Show Less';
-                    } else {
-                        readmeElement.innerHTML = truncatedFormatted;
-                        document.getElementById('toggle-readme').textContent = 'Show More';
-                    }
-                    // Force a reflow to ensure the height transition works correctly
-                    void readmeElement.offsetWidth;
-                });
-            } catch (error) {
-                console.error('Error fetching README:', error);
-            }
-        }
-
-        // Function to add social buttons
-        function addSocialButtons() {
-            // Fetch LinkedIn and GitHub icons
-            const linkedinIconUrl = 'media/linkedin.svg';
-            const githubIconUrl = 'https://simpleicons.org/icons/github.svg';
-
-            // Create LinkedIn button
-            const linkedinButton = document.createElement('a');
-            linkedinButton.href = 'https://ch.linkedin.com/in/massarin';
-            linkedinButton.target = '_blank';
-            linkedinButton.innerHTML = `<img src="${linkedinIconUrl}" alt="LinkedIn" width="72" height="72">`;
-            document.getElementById('social-buttons').appendChild(linkedinButton);
-
-            // Create GitHub button
-            const githubButton = document.createElement('a');
-            githubButton.href = 'https://github.com/massarin';
-            githubButton.target = '_blank';
-            githubButton.innerHTML = `<img src="${githubIconUrl}" alt="GitHub" width="72" height="72">`;
-            document.getElementById('social-buttons').appendChild(githubButton);
-        }
-
-        fetchAndDisplayReadme();
-        addSocialButtons(); // Call function to add social buttons
-
-        document.addEventListener("DOMContentLoaded", function() {
-            // Get the home link
-            const Link = document.querySelector("nav ul li a[href='#']");
-            
-            // Add the active class to the home link when the page loads
-            Link.classList.add("active");
-        });
-    </script>
-
-    <footer>
-        <p>&copy; Hosted on github.io &copy;</p>
-    </footer> 
 </body>
-
 </html>

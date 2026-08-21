@@ -9,20 +9,14 @@ var canvas = document.getElementById("GameCanvas");
 var ctx = canvas.getContext("2d");
 
 function resizeCanvas() {
-  var ratio = window.screen.width / window.screen.height
-  canvas.width = window.innerWidth * 0.65
-  canvas.height = canvas.width / ratio
-}
-
-function positionCanvas() {
-  canvas.style.position = 'absolute';
-  canvas.style.top = (window.innerHeight - canvas.height) / 2 + 'px';
-  canvas.style.left = (window.innerWidth - canvas.width) / 2 + 'px';
+  // Match the drawing buffer to the width CSS hands us, keeping a 3:2 box.
+  // The stylesheet owns the layout; this only keeps the pixels unstretched.
+  var width = canvas.clientWidth;
+  canvas.width = width;
+  canvas.height = width / 1.5;
 }
 
 resizeCanvas();
-positionCanvas();
-//window.addEventListener('resize', positionCanvas);
 
 
 var BallGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
@@ -320,8 +314,11 @@ function draw() {
     dy *= canvas.height / canvasHeightRenormalisation;
     x *= canvas.width / canvasWidthRenormalisation;
     y *= canvas.height / canvasHeightRenormalisation;
+    // The paddle is the one piece of geometry not recomputed per frame.
+    paddleHeight = paddleHeightRelative * canvas.height;
+    paddleWidth = paddleWidthRelative * canvas.width;
+    paddleX = Math.max(0, Math.min(paddleX, canvas.width - paddleWidth));
   }
-  positionCanvas();
 
   // Check if the game is over
   if (gameOver) { 
@@ -409,7 +406,7 @@ function keyUpHandler(e) {
 }
 
 function mouseMoveHandler(e) {
-  var relativeX = e.clientX - canvas.offsetLeft;
+  var relativeX = e.clientX - canvas.getBoundingClientRect().left;
   if (relativeX > 0 && relativeX < canvas.width) {
     paddleX = relativeX - paddleWidth / 2;
   }
