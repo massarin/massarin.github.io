@@ -1,4 +1,4 @@
-# Why do we astrophysics? - David Hogg
+# Why do we astrophysics? David Hogg
 
 Why do we do astrophysics? by David W. Hogg [^1]
 
