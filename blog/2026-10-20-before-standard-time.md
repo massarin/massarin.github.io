@@ -17,4 +17,4 @@ This raises the question of how to define a universal time:
 - [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time), based on cesium clocks
 
 [^source]: _Gleason's Pictorial Drawing-Room Companion_ (bi-weekly), Vol. IV, No. 26 (Whole No. 104), June 25, 1853, p. 416. Boston: Frederick Gleason, Publisher. The Cooper Collections of U.S. History.
-[^wiki]: From [Wikipedia](https://en.wikipedia.org/wiki/Standard_time).
+[^wiki]: From [Wikipedia](https://en.wikipedia.org/wiki/Universal_Time).
