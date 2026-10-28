@@ -1,4 +1,4 @@
-My tiny slice of _www_.
+### My tiny slice of _www_.
 
 Bare HTML, no framework, no build for the site.
 
@@ -7,19 +7,19 @@ Bare HTML, no framework, no build for the site.
 - `blog/*.md` are rendered to `blog/*.html` locally and committed. Equations
   become MathML at render time, so the published pages run no JavaScript.
 
-Install:
+### Install:
 ```bash
 pip install -r requirements.txt
 ```
 minimal dependencies.
 
-Local server:
+### Local server:
 ```bash
 python tools/serve.py
 ```
 then open, [http://localhost:8000](http://localhost:8000).
 
-Writing a post:
+### Writing a post:
 open, [http://localhost:8000/edit](http://localhost:8000/edit).
 
 Buttons explained:
@@ -28,7 +28,7 @@ Buttons explained:
 - also, renaming changes a post's URL and removes the old page
 - commit and push; GitHub Pages serves the files as we pass `.nojekyll`.
 
-Re-render:
+### Re-render:
 ```bash
 python tools/render.py
 ```
